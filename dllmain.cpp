@@ -1,28 +1,37 @@
-#define _CRT_SECURE_NO_WARNINGS
+#pragma comment(lib, "libMinHook.x86.lib")
+#include "Minhook.h"
+#include "Global.h"
+#include "ConsoleUtils.h"
+#include "UiUtils.h"
 #include <Windows.h>
 #include <iostream>
 
+const static int WAIT_DELAY = 5000; //Give the engine a bit to start up before patching anything so we can find RVAs, etc
+
 DWORD WINAPI MainThread(LPVOID lpParam) {
-    AllocConsole();
-    SetConsoleTitleA("FacadeModLoader");
+    ConsoleUtils::CreateConsole("FacadeModLoader v1.0 / github.com/facaderesearch");
 
-    if (freopen("CONOUT$", "w", stdout) == nullptr) {
+    if (MH_Initialize() != MH_OK) {
+        ConsoleUtils::Log("<dllmain.MainThread> MinHook failed to Initialize.");
         return -1;
     }
 
-    if (freopen("CONOUT$", "w", stderr) == nullptr) {
+    Sleep(WAIT_DELAY);
+
+    HMODULE animEngineHandle = GetModuleHandle(L"animEngineDLL.dll");
+    HMODULE nativeAnimInterfaceHandle = GetModuleHandle(L"nativeaniminterface.dll");
+
+    if (!animEngineHandle || !nativeAnimInterfaceHandle) {
         return -1;
     }
 
-    if (freopen("CONIN$", "r", stdin) == nullptr) {
-        return -1;
-    }
+    Global::SetAnimEngineBase(animEngineHandle);
+    Global::SetNativeAnimInterfaceBase(nativeAnimInterfaceHandle);
 
-    std::cout.clear();
-    std::cerr.clear();
-    std::clog.clear();
+    UiUtils::InsertPlayerName("Melon", "m", 0);
+    UiUtils::InsertPlayerName("Melon", "f", 1);
 
-    std::cout << "Great things await." << std::endl;
+    ConsoleUtils::Log("FacadeModLoader has loaded successfully.");
 
     return 0;
 }
