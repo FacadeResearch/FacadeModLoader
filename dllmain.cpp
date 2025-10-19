@@ -27,7 +27,7 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
     return 0;
 }
 
-//Just so we can import it with CFF Explorer, completely unneeded.
+//Just so we can hook the IAT, completely unneeded.
 extern "C" __declspec(dllexport)
 int Stub()
 {
