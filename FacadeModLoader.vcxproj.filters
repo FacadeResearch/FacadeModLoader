@@ -13,33 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{84e23095-310a-4af5-9af7-db7f9a12b8df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mods">
+      <UniqueIdentifier>{db5edf0a-06be-4a66-af13-e57553c84d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{337155f1-f5a6-497c-9ad8-050b6e0a2606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mods">
+      <UniqueIdentifier>{f999b711-33c8-4ef7-9d82-789ebcef968a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleUtils.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="UiUtils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Global.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleUtils.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="QoLFixesMod.cpp">
+      <Filter>Source Files\Mods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Offsets.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ConsoleUtils.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="UiUtils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="FML_API.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Global.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleUtils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="IFacadeMod.h">
+      <Filter>Header Files\Mods</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UiUtils.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

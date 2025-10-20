@@ -28,7 +28,7 @@ void ConsoleUtils::CreateConsole(const char* title)
     std::clog.clear();
 }
 
-void ConsoleUtils::Log(const char* message)
+void ConsoleUtils::Log(const std::string& message)
 {
     time_t time_now = std::time(0);
 

@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,6 +83,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,11 +144,14 @@
     <ClCompile Include="ConsoleUtils.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Global.cpp" />
+    <ClCompile Include="QoLFixesMod.cpp" />
     <ClCompile Include="UiUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
+    <ClInclude Include="FML_API.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="IFacadeMod.h" />
     <ClInclude Include="Offsets.h" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
