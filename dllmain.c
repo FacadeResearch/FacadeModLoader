@@ -63,8 +63,21 @@ void LoadMods() {
     }
 }
 
+bool Patch(void* address, void* data, size_t size) {
+    DWORD oldProtect;
+
+    if (!VirtualProtect(address, size, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        return false;
+    }
+
+    memcpy(address, data, size);
+    VirtualProtect(address, size, oldProtect, &oldProtect);
+    FlushInstructionCache(GetCurrentProcess(), address, size);
+    
+    return true;
+}
+
 DWORD WINAPI MainThread(LPVOID lpParam) {
-    Sleep(3000);
     CreateConsole();
 
     uintptr_t base = (uintptr_t)GetModuleHandleA("animEngineDLL.dll");
@@ -75,7 +88,7 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
     } 
 
     LoadMods();
-
+   
     return 0;
 }
 
