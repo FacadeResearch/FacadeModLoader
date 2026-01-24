@@ -75,6 +75,27 @@ char* getPlayerName() {
     return getName(pPlayer);
 }
 
+typedef uint32_t (__cdecl* tPlaySoundEffect)(int32_t arg1);
+tPlaySoundEffect originalPlaySoundEffect = NULL;
+
+typedef HCURSOR (__thiscall* tChangeCursorImage)(void* pThis, HCURSOR arg2);
+tChangeCursorImage originalChangeCursorImage = NULL;
+
+HCURSOR __thiscall hookedChangeCursorImage(void* pThis, HCURSOR arg2) {
+    printf("[XCursor] Requested ID: %p\n", arg2);
+
+   //arg2 = (HCURSOR)14;
+
+   printf("pThis[0x30]: %p\n", *(void**)((char*)pThis + 0x30));
+   
+    HCURSOR result = originalChangeCursorImage(pThis, arg2);
+
+    printf("Result %d\n", result);
+
+    //arg2 = 6 (knock)
+    return result;
+}
+
 int __cdecl hookedGetStrLen(char* str) {
     void* caller = __builtin_return_address(0);
 
@@ -167,6 +188,46 @@ tDrawGameString DrawGameString = NULL;
 typedef int32_t (__cdecl* tSub_1009d210)();
 tSub_1009d210 originalSub_1009d210 = NULL;
 
+uint32_t hookedPlaySoundEffect(int32_t arg1) {
+    uint32_t result = originalPlaySoundEffect(arg1);
+
+    printf("Playing sound effect: %d\nResult: %d\n", arg1, result);
+
+    return result;
+}
+
+typedef uint32_t (__cdecl* tSub_10091af0)(int32_t arg1, char arg2);
+tSub_10091af0 originalSub_10091af0 = NULL;
+
+typedef int32_t* (__thiscall* tFindObject)(void* pWorldManager, const char* name);
+tFindObject FindObject = NULL;
+
+typedef int32_t* (__thiscall* tPackCoords)(int32_t* arg1, int32_t arg2, int32_t arg3, int32_t arg4);
+tPackCoords PackCoords = NULL;
+
+uint32_t hookedSub_10091af0(int32_t arg1, char arg2) {
+    uint32_t result = originalSub_10091af0(arg1, arg2);
+
+    void* worldManager = (void*)(base + 0x83f640);
+    if (worldManager) {
+        int32_t* pCouch = FindObject(worldManager, "couch");
+        if (pCouch) {
+            printf("Success! Couch found at %p\n", pCouch);
+
+            typedef void (__thiscall* tSetPos)(void* pThis, int32_t x, int32_t y, int32_t z, int32_t flag);
+            
+            uintptr_t vtable = *(uintptr_t*)pCouch;
+            
+            tSetPos setPos = (tSetPos)*(uintptr_t*)(vtable + 0x3c);
+
+            setPos(pCouch, 0x43200000, 0, 0, 0xbf800000);
+        }
+    }
+
+    return result;
+}
+//b7a50
+
 int32_t __cdecl hookedSub_1009d210() {
     int32_t result = originalSub_1009d210();
 
@@ -223,10 +284,15 @@ __declspec(dllexport) void OnLoad(FacadeAPI* api) {
     base = (uintptr_t)GetModuleHandleA("animEngineDLL.dll");
 
     DrawGameString = (tDrawGameString)(base + 0x9e370);
+    originalPlaySoundEffect = (tPlaySoundEffect)(base + 0xa850);
+    FindObject = (tFindObject)(base + 0xa7530);
+    PackCoords = (tPackCoords)(base + 0x13c30);
 
     api->Hook((void*)(base + 0xafd30), (void*)&hookedGetSpeedValue, (void**)&originalGetSpeedValue);
     api->Hook((void*)(base + 0xb6e40), (void*)&hookedGetStrLen, (void**)&originalGetStrLen);
     api->Hook((void*)(base + 0x9d210), (void*)&hookedSub_1009d210, (void**)&originalSub_1009d210);
+    //api->Hook((void*)(base + 0xb4de0), (void*)&hookedChangeCursorImage, (void**)&originalChangeCursorImage);
+    api->Hook((void*)(base + 0x91af0), (void*)&hookedSub_10091af0, (void**)&originalSub_10091af0);
 
-    //InsertCustomName(0, "melon");
+    //InsertCustomName(0, "Melon");
 }
