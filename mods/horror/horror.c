@@ -177,11 +177,26 @@ void DrawPsychosisOverlay() {
 typedef void(__thiscall *tSetPos)(void *pThis, int32_t x, int32_t y, int32_t z, int32_t flag);
 tSetPos original_SetPos = NULL;
 
+typedef int32_t *(__thiscall *tFindObject)(void *pWorldManager, const char *name);
+tFindObject FindObject = NULL;
+
+const char* randomObjs[] = {
+    "couch", "cabinet", "side table", "work table", "side table 2", "plant", "ashtray", "phone", "answering machine", "red wine bottle", "white wine bottle", "martini glass 1", 
+    "martini glass 2", "martini glass 3", "martini glass 4", "bar_redwinebottle", "bar_whitewinebottle", "player's drink", "Trip's drink", "Grace's drink", "big abstract painting",
+    "little painting", "maoPainting", "wedding photo", "italy picture", "wedding gown sketch", "wedding gown post its", "wedding gown sketch 3", "wedding gown sketch 4",
+    "tuxedosketch1", "tuxedosketch2", "advice ball", "advice ball message", "brass bull", "trinket 1", "trinket 2", "trinket 3", "trinket 4", "trinket 5", "trinket6", "trinket 7",
+    "trinket 8", "front door", "elevator button", "bedroom door", "grace", "trip" //fuck you grace & trip, get teleported under the floor
+};
+
+#define OBJ_COUNT (sizeof(randomObjs) / sizeof(randomObjs[0]))
+
+static int removalItemDelay = 30 * 100;
 int32_t __cdecl hookedGameLoop()
 {
     int32_t result = originalGameLoop();
     DWORD currentTick = GetTickCount();
     static DWORD lastTick = 0;
+    static DWORD lastEventTick = 0;
 
     if (GetTickCount() - lastTick > InsanityDelay) {
         if (!(GetAsyncKeyState(VK_RSHIFT) & 0x8000)) {
@@ -195,6 +210,32 @@ int32_t __cdecl hookedGameLoop()
         }
 
         lastTick = GetTickCount();
+    }
+
+    if (sanityMeter < 70 && (currentTick - lastEventTick > removalItemDelay))
+    {
+        void *worldManager = (void *)(base + 0x83f640);
+        if (worldManager)
+        {
+            int randomIndex = rand() % OBJ_COUNT;
+            int32_t *pObj = FindObject(worldManager, randomObjs[randomIndex]);
+
+            if (pObj && *(uintptr_t*)pObj > base)
+            {
+                uintptr_t vtable = *(uintptr_t *)pObj;
+
+                if (!IsBadReadPtr((void*)vtable, 0x40)) {
+                    tSetPos setPos = (tSetPos)*(uintptr_t*)(vtable + 0x3c);
+
+                    int32_t randX = (rand() % 1000) - 500;
+                    int32_t randZ = (rand() % 1000) - 500;
+
+                    setPos(pObj, randX, -2000, randZ, 0xbf800000);
+                }
+            }
+        }
+
+        lastEventTick = currentTick;
     }
 
     if (sanityMeter < 70) {
@@ -230,14 +271,11 @@ int32_t __cdecl hookedGameLoop()
         DrawGameString("RUN.", x, y, 0x190, 10.0f, 0.0f, 7, 0);
     }
     
-    if (sanityMeter <= 60 && !musicTriggered) {
+    if (sanityMeter <= 90 && !musicTriggered) {
         playMusicFunc("sounds\\mp3_2\\4.mp3", 100, 60);
 
         musicTriggered = true;
     } 
-    else if (sanityMeter > 65) {
-        musicTriggered = false; 
-    }
 
     char insanityBuf[64];
     sprintf(insanityBuf, "Sanity: %d%%", sanityMeter);
@@ -323,6 +361,8 @@ void OnLoad(FacadeAPI* api) {
     tglClear real_glClear = (tglClear)GetProcAddress(hGlut, "glClear");
 
     original_glColor4f = (tglColor4f)GetProcAddress(hGlut, "glColor4f");
+
+    FindObject = (tFindObject)(base + 0xa7530);
 
     tglTranslatef real_glTranslatef = (tglTranslatef)GetProcAddress(hGlut, "glTranslatef");
     _glDisableClientState = (tglDisableClientState)GetProcAddress(hGlut, "glDisableClientState");
