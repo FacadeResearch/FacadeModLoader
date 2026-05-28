@@ -7,7 +7,7 @@
 #include <iostream>
 #include <filesystem>
 #include "IFacadeMod.h"
-#include "QoLFixesMod.cpp"
+#include "CommandsMod.h"
 
 const static int WAIT_DELAY = 1500; //Give the engine a bit to start up before patching anything so we can find RVAs, etc
 
@@ -99,11 +99,12 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
         }
     }
 
-    QoLFixesMod* qolfixesmod = new QoLFixesMod();
 
-    qolfixesmod->Load();
+    CommandsMod* commands = new CommandsMod();
 
-    ConsoleUtils::Log(std::string("Loaded Core Mod ") + qolfixesmod->GetName() + " by " + qolfixesmod->GetAuthor());
+    commands->Load();
+
+    ConsoleUtils::Log(std::string("Loaded Core Mod ") + commands->GetName() + " by " + commands->GetAuthor());
 
     ConsoleUtils::Log("FacadeModLoader has loaded successfully.");
 

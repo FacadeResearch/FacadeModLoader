@@ -33,13 +33,10 @@
     <ClCompile Include="ConsoleUtils.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="UiUtils.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="QoLFixesMod.cpp">
+    <ClCompile Include="CommandsMod.h">
       <Filter>Source Files\Mods</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +53,10 @@
     <ClInclude Include="IFacadeMod.h">
       <Filter>Header Files\Mods</Filter>
     </ClInclude>
-    <ClInclude Include="Offsets.h">
+    <ClInclude Include="UiUtils.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="UiUtils.h">
+    <ClInclude Include="LightHook.hpp">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>

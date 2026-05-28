@@ -141,18 +141,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandsMod.h" />
     <ClCompile Include="ConsoleUtils.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Global.cpp" />
-    <ClCompile Include="QoLFixesMod.cpp" />
-    <ClCompile Include="UiUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
     <ClInclude Include="FML_API.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="IFacadeMod.h" />
-    <ClInclude Include="Offsets.h" />
+    <ClInclude Include="LightHook.hpp" />
     <ClInclude Include="UiUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
