@@ -60,19 +60,19 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
 
         std::filesystem::path filename = path.filename();
 
-        ConsoleUtils::Log(std::string("Loading " + filename.string() + "..."));
+        ConsoleUtils::Log(std::string("<dllmain.MainThread> Loading " + filename.string() + "..."));
 
         HMODULE library = LoadLibraryA(absolute_path.string().c_str());
 
         if (library == nullptr) {
-            ConsoleUtils::Log(std::string("Failed to load " + path.string() + " - skipping.."));
+            ConsoleUtils::Log(std::string("<dllmain.MainThread> Failed to load " + path.string() + " - skipping.."));
             continue;
         }
 
         CreateModFn createmod = (CreateModFn)GetProcAddress(library, "CreateMod");
 
         if (createmod == nullptr) {
-            ConsoleUtils::Log(std::string("Failed to load " + path.string() + " - no exported CreateMod - skipping.."));
+            ConsoleUtils::Log(std::string("<dllmain.MainThread> Failed to load " + path.string() + " - no exported CreateMod - skipping.."));
             FreeLibrary(library);
             continue;
         }
@@ -80,7 +80,7 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
         DestroyModFn destroymod = (DestroyModFn)GetProcAddress(library, "DestroyMod");
 
         if (destroymod == nullptr) {
-            ConsoleUtils::Log(std::string("Failed to load " + path.string() + " - no exported DestroyMod - skipping.."));
+            ConsoleUtils::Log(std::string("<dllmain.MainThread> Failed to load " + path.string() + " - no exported DestroyMod - skipping.."));
             FreeLibrary(library);
             continue;
         }
@@ -92,21 +92,14 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
 
             Mods.push_back({ library, mod, destroymod });
 
-            ConsoleUtils::Log(std::string("Loaded ") + mod->GetName() + " by " + mod->GetAuthor());
+            ConsoleUtils::Log(std::string("<dllmain.MainThread> Loaded ") + mod->GetName() + " by " + mod->GetAuthor());
         }
         else {
             FreeLibrary(library);
         }
     }
 
-
-    CommandsMod* commands = new CommandsMod();
-
-    commands->Load();
-
-    ConsoleUtils::Log(std::string("Loaded Core Mod ") + commands->GetName() + " by " + commands->GetAuthor());
-
-    ConsoleUtils::Log("FacadeModLoader has loaded successfully.");
+    ConsoleUtils::Log("<dllmain.MainThread> FacadeModLoader has loaded successfully.");
 
     return 0;
 }

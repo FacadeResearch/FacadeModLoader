@@ -141,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandsMod.h" />
     <ClCompile Include="ConsoleUtils.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Global.cpp" />

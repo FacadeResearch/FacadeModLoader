@@ -22,9 +22,6 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{337155f1-f5a6-497c-9ad8-050b6e0a2606}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Mods">
-      <UniqueIdentifier>{f999b711-33c8-4ef7-9d82-789ebcef968a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -35,9 +32,6 @@
     </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandsMod.h">
-      <Filter>Source Files\Mods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
