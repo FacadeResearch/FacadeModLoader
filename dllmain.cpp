@@ -11,6 +11,8 @@
 
 const static int WAIT_DELAY = 1500; //Give the engine a bit to start up before patching anything so we can find RVAs, etc
 
+static bool NoConsole = false;
+
 using CreateModFn = IFacadeMod * (*)();
 using DestroyModFn = void(*)(IFacadeMod* instance);
 
@@ -22,8 +24,42 @@ struct LoadedMod {
 
 static std::vector<LoadedMod> Mods;
 
+bool ParseIniEntry(std::filesystem::path filePath, LPCWSTR sectionName, LPCWSTR entryName, LPCWSTR defaultValue)
+{
+    if (std::filesystem::exists(filePath))
+    {
+        wchar_t resultStr[32] = { 0 };
+
+        GetPrivateProfileStringW(
+            sectionName,
+            entryName,
+            defaultValue,
+            resultStr,
+            32,
+            filePath.wstring().c_str()
+        );
+
+        std::wstring val(resultStr);
+
+        if (val == L"true" || val == L"True" || val == L"1") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else 
+    {
+        return false;
+    }
+}
+
 DWORD WINAPI MainThread(LPVOID lpParam) {
-    ConsoleUtils::CreateConsole("FacadeModLoader v1.0 / github.com/facaderesearch");
+    NoConsole = ParseIniEntry(std::filesystem::absolute("FacadeModLoader.ini"), L"FacadeModLoader", L"NoConsole", L"false");
+
+    if (!NoConsole) {
+        ConsoleUtils::CreateConsole("FacadeModLoader v1.0 / github.com/facaderesearch");
+    }
 
     if (MH_Initialize() != MH_OK) {
         ConsoleUtils::Log("<dllmain.MainThread> MinHook failed to Initialize.");
